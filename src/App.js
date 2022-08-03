@@ -5,12 +5,25 @@ import { CompletedSquare } from './CompletedSquare.js';
 
 const App = () => {
 
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
   const [doTasks, setDoTasks] = useState([]);
   const [planTasks, setPlanTasks] = useState([]);
   const [delegateTasks, setDelegateTasks] = useState([]);
   const [dropTasks, setDropTasks] = useState([]);
 
   const [completedTasks, setCompletedTasks] = useState([]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  }
+
+  const removeTaskWithConfirm = (task, category) => {
+    if (!window.confirm(`Are you sure you want to delete task "${task}"?`)) {
+      return;
+    }
+    removeTask(task, category);
+  };
 
   const removeTask = (task, category) => {
     const isNotSameTask = t => t !== task;
@@ -31,6 +44,8 @@ const App = () => {
       case "complete":
         setCompletedTasks([...completedTasks].filter(isNotSameTask));
         break;
+      default:
+        break;
     }
   };
 
@@ -47,6 +62,8 @@ const App = () => {
         break;
       case "drop":
         setDropTasks([...dropTasks, task]);
+        break;
+      default:
         break;
     }
   };
@@ -66,38 +83,47 @@ const App = () => {
   }, [doTasks, planTasks, delegateTasks, dropTasks, completedTasks]);
 
   return (
-    <div className="App">
+    <div className={ isDarkMode ? 'App dark' : 'App' } >
       <header className="App-header">
+        Eisenhower To-Do
+        <button 
+          onClick={toggleDarkMode}>
+          { isDarkMode ? 'Light' : 'Dark' }
+        </button>
       </header>
       <div className="squares-container">
         <Square 
           category="do"
           tasks={doTasks} 
           addTask={addTask}
-          removeTask={removeTask}
+          removeTask={removeTaskWithConfirm}
           moveTask={moveTask}
           completeTask={completeTask} />
         <Square 
           category="plan"
           tasks={planTasks} 
           addTask={addTask}
-          removeTask={removeTask}
+          removeTask={removeTaskWithConfirm}
           moveTask={moveTask}
           completeTask={completeTask} />
+      </div>
+      <div className="squares-container">
         <Square 
           category="delegate"
           tasks={delegateTasks} 
           addTask={addTask}
-          removeTask={removeTask}
+          removeTask={removeTaskWithConfirm}
           moveTask={moveTask}
           completeTask={completeTask} />
         <Square 
           category="drop"
           tasks={dropTasks} 
           addTask={addTask}
-          removeTask={removeTask}
+          removeTask={removeTaskWithConfirm}
           moveTask={moveTask}
           completeTask={completeTask} />
+      </div>
+      <div className="squares-container">
         <CompletedSquare
           tasks={completedTasks} 
           moveTask={moveTask}
