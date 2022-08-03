@@ -11,14 +11,14 @@ export const NewTaskForm = ({addTask, category}) => {
   };
 
   return (
-    <form className="new-task-form">
+    <form className="new-task-form" onSubmit={addTaskAndResetInput}>
       <input
         name="new-task-text"
         value={val}
         required
         onChange={e => setVal(e.target.value)}
       /> 
-      <button className="new-task-btn" onClick={addTaskAndResetInput}>
+      <button className="new-task-btn">
         +
       </button>
     </form>
